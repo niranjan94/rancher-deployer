@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"github.com/urfave/cli"
-	"github.com/niranjan94/rancher-deployer/actions"
+	"github.com/niranjan94/rancher-deployer/src/actions"
 )
 
 func main() {

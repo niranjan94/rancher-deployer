@@ -3,8 +3,7 @@ package actions
 import (
 	"fmt"
 	"runtime"
-	"github.com/niranjan94/rancher-deployer/utils"
-	"os/exec"
+	"github.com/niranjan94/rancher-deployer/src/utils"
 	"github.com/fatih/color"
 	"os"
 	"io/ioutil"
@@ -13,7 +12,9 @@ import (
 const KubectlVersion = "v1.10.3"
 const RancherCliVersion = "v2.0.0"
 
+//
 // Download kubectl & rancher-cli
+//
 func DownloadDependencies() string {
 	dir, _ := ioutil.TempDir("", "rancher-deployer");
 	kubectlUrl := fmt.Sprintf(
@@ -24,7 +25,7 @@ func DownloadDependencies() string {
 	)
 	kubectlDir := dir + "/kubectl"
 	utils.DownloadFile(kubectlDir, kubectlUrl)
-	exec.Command("chmod", "+x", kubectlDir).Output()
+	utils.RunCommand("chmod", "+x", kubectlDir)
 	color.Green("✔Downloaded kubectl " + KubectlVersion)
 
 	rancherUrl := fmt.Sprintf(
@@ -37,10 +38,10 @@ func DownloadDependencies() string {
 	rancherDir := dir + "/rancher"
 	rancherCliFiles := utils.DownloadExtract(rancherUrl)
 	os.Rename(fmt.Sprintf("%s/rancher-%s/rancher", rancherCliFiles, RancherCliVersion), rancherDir)
-	exec.Command("chmod", "+x", rancherDir).Output()
+	utils.RunCommand("chmod", "+x", rancherDir)
 	os.Environ()
 	color.Green("✔downloaded rancher-cli " + RancherCliVersion)
 	defer os.RemoveAll(rancherCliFiles)
-	os.Setenv("PATH", os.Getenv("PATH") + ":" + dir)
+	os.Setenv("PATH", dir + ":" + os.Getenv("PATH"))
 	return dir
 }
