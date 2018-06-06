@@ -1,0 +1,12 @@
+builds:
+  - binary: rancher-deployer
+    goos:
+      - windows
+      - darwin
+      - linux
+      - freebsd
+      - openbsd
+    goarch:
+      - amd64
+      - 386
+      - arm
