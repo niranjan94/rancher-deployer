@@ -12,7 +12,7 @@ ARCH=amd64 386
 OS=darwin linux
 LDFLAGS=-s -w
 
-all: clean build
+all: clean deps build
 
 build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
@@ -30,6 +30,7 @@ run:
 	./$(BINARY_NAME)
 
 deps:
+	command -v dep >/dev/null 2>&1 || go get -u github.com/golang/dep/cmd/dep
 	$(DEPCMD) ensure
 
 release: clean

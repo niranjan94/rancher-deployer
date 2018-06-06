@@ -12,3 +12,4 @@
 vendor
 dist
 .rancher.deployer.yml
+rancher-deployer
