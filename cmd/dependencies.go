@@ -1,9 +1,9 @@
-package actions
+package cmd
 
 import (
 	"fmt"
 	"runtime"
-	"github.com/niranjan94/rancher-deployer/src/utils"
+	"github.com/niranjan94/rancher-deployer/cmd/utils"
 	"github.com/fatih/color"
 	"os"
 	"io/ioutil"

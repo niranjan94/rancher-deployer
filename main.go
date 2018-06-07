@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"github.com/urfave/cli"
-	"github.com/niranjan94/rancher-deployer/src/actions"
+	"github.com/niranjan94/rancher-deployer/cmd"
 )
 
 func main() {
@@ -35,7 +35,7 @@ func main() {
 		if c.String("token") != "" {
 			os.Setenv("DEPLOYER_TOKEN", c.String("token"))
 		}
-		actions.LoadConfig()
+		cmd.LoadConfig()
 		return nil
 	}
 
