@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/briandowns/spinner"
+  packages = ["."]
+  revision = "48dbb65d7bd5c74ab50d53d04c949f20e3d14944"
+  version = "1.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/dsnet/compress"
   packages = [
@@ -163,6 +169,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5c5ed85b3a0599477b777ef1a388f30f602032c0e242d4abb8f0b832c6c9f1cb"
+  inputs-digest = "b53cd9017a1f388b7997e885ee273d006d7bdcc648f100c09789e89ac825c7fe"
   solver-name = "gps-cdcl"
   solver-version = 1

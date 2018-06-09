@@ -1,8 +1,12 @@
+VERSION=snapshot
+REVISION=$(shell git rev-parse --short HEAD)
+
 GOXCMD=gox
 DEPCMD=dep
 
 GOCMD=go
 GOBUILD=$(GOCMD) build
+GORUN=$(GOCMD) run
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
@@ -10,7 +14,7 @@ GOGET=$(GOCMD) get
 BINARY_NAME=rancher-deployer
 ARCH=amd64 386
 OS=darwin linux
-LDFLAGS=-s -w
+LDFLAGS=-s -w -X main.version=$(VERSION) -X main.revision=$(REVISION)
 
 all: clean deps build
 
@@ -26,8 +30,8 @@ clean:
 	rm -rf dist
 
 run:
-	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	./$(BINARY_NAME)
+	$(GOBUILD) -ldflags="${LDFLAGS}" -o $(BINARY_NAME) -v
+	./$(BINARY_NAME) $(ARGS)
 
 deps:
 	command -v dep >/dev/null 2>&1 || go get -u github.com/golang/dep/cmd/dep
