@@ -7,7 +7,7 @@ script:
   - make
 
 after_success:
-  - make release
+  - VERSION=${TRAVIS_TAG:-snapshot} make -e release
 
 deploy:
   provider: releases
