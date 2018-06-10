@@ -35,6 +35,7 @@ run:
 
 deps:
 	command -v dep >/dev/null 2>&1 || go get -u github.com/golang/dep/cmd/dep
+	go get -u github.com/mitchellh/gox
 	$(DEPCMD) ensure
 
 release: clean
