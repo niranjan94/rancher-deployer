@@ -29,6 +29,11 @@ func Deploy(c *cli.Context) {
 
 	for _, environment := range environments {
 		configPath := "environments." + environment
+		token := viper.GetString(configPath + ".token")
+
+		if  token == "" {
+			token = globalToken
+		}
 
 		if !viper.IsSet(configPath) {
 			color.Red("! Skipping invalid environment %s", environment)
@@ -36,16 +41,11 @@ func Deploy(c *cli.Context) {
 		}
 
 		for _, config := range utils.GetSliceInterfaceAsSubs(viper.Get("environments." + environment)) {
-			token := config.GetString("token")
 			rancherUrl := config.GetString("rancherUrl")
 			project := config.GetString("project")
 			image := config.GetString("image")
 			deployment := config.GetString("deployment")
 			namespace := config.GetString("namespace")
-
-			if  token == "" {
-				token = globalToken
-			}
 
 			if  rancherUrl == "" {
 				rancherUrl = globalRancherUrl
@@ -77,6 +77,7 @@ func Deploy(c *cli.Context) {
 					namespace,
 				),
 			)
+			color.Green("✔Updated deployment %s in %s", deployment, namespace)
 		}
 	}
 }

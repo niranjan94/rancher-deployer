@@ -6,6 +6,7 @@ import (
 	"github.com/urfave/cli"
 	"github.com/niranjan94/rancher-deployer/cmd"
 	"fmt"
+	"github.com/spf13/viper"
 )
 
 var version = "snapshot"
@@ -24,24 +25,29 @@ func main() {
 
 	app.Flags = []cli.Flag {
 		cli.StringFlag{
-			Name: "token",
+			Name: "config,c",
 			Value: "",
-			Usage: "Override token for deployment",
+			Usage: "`PATH` to a yaml config file",
 		},
 		cli.StringFlag{
-			Name: "tag",
+			Name: "token,t",
 			Value: "",
-			Usage: "Override the tag for the docker image to use",
+			Usage: "Override `TOKEN` for deployment",
 		},
 		cli.StringFlag{
-			Name: "image",
+			Name: "tag,T",
 			Value: "",
-			Usage: "Override the docker image",
+			Usage: "Override the `TAG` for the docker image to use",
 		},
 		cli.StringFlag{
-			Name: "environments",
+			Name: "image,i",
 			Value: "",
-			Usage: "Environments to deploy to (comma-separated)",
+			Usage: "Override the Docker `IMAGE-URL`",
+		},
+		cli.StringFlag{
+			Name: "environments,e",
+			Value: "",
+			Usage: "`ENVIRONMENTS` to deploy to (comma-separated)",
 		},
 	}
 
@@ -49,7 +55,8 @@ func main() {
 		if c.String("token") != "" {
 			os.Setenv("DEPLOYER_TOKEN", c.String("token"))
 		}
-		cmd.LoadConfig()
+		cmd.LoadConfig(c.String("config"))
+		fmt.Println(viper.Get("rancherUrl"))
 		cmd.Deploy(c)
 		return nil
 	}

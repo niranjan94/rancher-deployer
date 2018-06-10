@@ -33,12 +33,12 @@ type Rancher struct {
 
 func New(homeDirectory string, token string, project string, serverUrl string) *Rancher {
 	v := new(Rancher)
-	v.setRancherConfig(homeDirectory, token, project, serverUrl)
+	v.homeDirectory = homeDirectory
+	v.setRancherConfig(token, project, serverUrl)
 	return v
 }
 
-func (r *Rancher) setRancherConfig(homeDirectory string, token string, project string, serverUrl string) {
-	r.homeDirectory = homeDirectory
+func (r *Rancher) setRancherConfig(token string, project string, serverUrl string) {
 	splitToken := strings.Split(token, ":")
 	config := config{
 		CurrentServer: "PrimaryServer",
