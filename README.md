@@ -1,5 +1,10 @@
 # Rancher Deployer
 
+[![Build Status](https://travis-ci.com/niranjan94/rancher-deployer.svg?branch=master)](https://travis-ci.com/niranjan94/rancher-deployer) 
+[![GitHub (pre-)release](https://img.shields.io/github/release/niranjan94/rancher-deployer/all.svg)](https://github.com/niranjan94/rancher-deployer/releases/latest)
+
+
+
 ```
 USAGE:
    rancher-deployer [global options] [arguments...]
