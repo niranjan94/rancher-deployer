@@ -3,6 +3,11 @@ language: go
 go:
   - "1.10"
 
+addons:
+  apt:
+    packages:
+    - upx-ucl
+
 script:
   - make
 
@@ -11,6 +16,7 @@ after_success:
   - make -e release
   - mkdir gh-pages
   - sed -e "s/\${VERSION}/$VERSION/" scripts/run.sh > gh-pages/run.sh
+  - if [ -n "$TRAVIS_TAG" ]; then travis_wait upx -v -9 ./dist/*; fi
 
 deploy:
   - provider: releases
