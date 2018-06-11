@@ -12,7 +12,7 @@ GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 
 BINARY_NAME=rancher-deployer
-ARCH=amd64 386
+ARCH=amd64
 OS=darwin linux
 LDFLAGS=-s -w -X main.version=$(VERSION) -X main.revision=$(REVISION)
 
@@ -39,4 +39,4 @@ deps:
 	$(DEPCMD) ensure
 
 release: clean
-	$(GOXCMD) -arch="${ARCH}" -os="${OS}" -ldflags="${LDFLAGS}" -output="dist/${BINARY_NAME}_{{.OS}}_{{.Arch}}"
+	$(GOXCMD) -arch="${ARCH}" -os="${OS}" -ldflags="${LDFLAGS}" -output="dist/${BINARY_NAME}_{{.OS}}_x86_64"
