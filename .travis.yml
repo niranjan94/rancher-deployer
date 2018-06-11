@@ -7,13 +7,23 @@ script:
   - make
 
 after_success:
-  - VERSION=${TRAVIS_TAG:-snapshot} make -e release
+  - export VERSION=${TRAVIS_TAG:-snapshot}
+  - make -e release
+  - mkdir gh-pages
+  - sed -e "s/\${VERSION}/$VERSION/" scripts/run.sh > gh-pages/run.sh
 
 deploy:
-  provider: releases
-  api_key: $GITHUB_TOKEN
-  file_glob: true
-  file: dist/*
-  skip_cleanup: true
-  on:
-    tags: true
+  - provider: releases
+    api_key: $GITHUB_TOKEN
+    file_glob: true
+    file: dist/*
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    keep-history: true
+    local-dir: gh-pages
+    on:
+      tags: true
