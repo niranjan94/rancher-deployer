@@ -2,79 +2,53 @@ package rancher
 
 import (
 	"strings"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"os/exec"
-	"os"
+	"gopkg.in/resty.v1"
 )
 
-type serverConfig struct {
+//ServerConfig holds the config for each server the user has setup
+type ServerConfig struct {
 	AccessKey string `json:"accessKey"`
 	SecretKey string `json:"secretKey"`
 	TokenKey  string `json:"tokenKey"`
+	URL       string `json:"url"`
 	Project   string `json:"project"`
-	Cacert    string `json:"cacert"`
-	Url       string `json:"url"`
-}
-
-type serversConfig struct {
-	PrimaryServer serverConfig
-}
-
-type config struct {
-	CurrentServer string
-	Servers       serversConfig
+	CACerts   string `json:"cacert"`
 }
 
 type Rancher struct {
-	homeDirectory string
+	config ServerConfig
+	K8sClient *K8s
+	client *resty.Client
 }
 
-func New(homeDirectory string, token string, project string, serverUrl string) *Rancher {
-	v := new(Rancher)
-	v.homeDirectory = homeDirectory
-	v.setRancherConfig(token, project, serverUrl)
-	return v
+type KubeConfigApiResponse struct {
+	Config string `json:"config"`
 }
 
-func (r *Rancher) setRancherConfig(token string, project string, serverUrl string) {
+func New(token string, project string, serverUrl string) *Rancher {
+	r := new(Rancher)
 	splitToken := strings.Split(token, ":")
-	config := config{
-		CurrentServer: "PrimaryServer",
-		Servers: serversConfig{
-			PrimaryServer: serverConfig{
-				AccessKey: splitToken[0],
-				SecretKey: splitToken[1],
-				TokenKey:  token,
-				Url:       serverUrl,
-				Project:   project,
-				Cacert:    "",
-			},
-		},
+	r.config = ServerConfig{
+		AccessKey: splitToken[0],
+		SecretKey: splitToken[1],
+		TokenKey:  token,
+		URL:       serverUrl,
+		Project:   project,
+		CACerts:    "",
 	}
+	r.client = resty.New()
+	r.client.SetBasicAuth(r.config.AccessKey, r.config.SecretKey)
+	r.client.HostURL = r.config.URL
+	r.client.SetHeader("Accept", "application/json")
 
-	jsonByteArray, err := json.Marshal(config)
+	resp, err := r.client.R().SetResult(KubeConfigApiResponse{}).Post(fmt.Sprintf("/v3/clusters/%s?action=generateKubeconfig", strings.Split(project, ":")[0]))
 
 	if err != nil {
-		panic(fmt.Errorf("Could not marshal as json: %s \n", err))
-	} else {
-		ioutil.WriteFile(r.homeDirectory + "/.rancher/cli.json", jsonByteArray, 0644)
+		panic(err.Error())
 	}
-}
 
-func (r *Rancher) RunCommand(command string) string  {
-	cmd := exec.Command("sh", "-c", "rancher " + command)
-	cmd.Env = append(os.Environ(),
-		"HOME=" + r.homeDirectory,
-	)
-	output, err := cmd.Output()
-	if err != nil {
-		return err.Error()
-	}
-	return string(output[:])
-}
-
-func (r *Rancher) RunKubectlCommand(command string) string  {
-	return r.RunCommand("kubectl " + command)
+	kubeConfig := resp.Result().(*KubeConfigApiResponse).Config
+	r.K8sClient = NewK8sClient(kubeConfig, false)
+	return r
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+//noinspection GoUnusedExportedFunction
 func GetSliceInterfaceAsMaps(args interface{}) []map[string]string {
 	s := reflect.ValueOf(args)
 	output := make([]map[string]string, s.Len())

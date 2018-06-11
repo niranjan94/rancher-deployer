@@ -6,7 +6,6 @@ import (
 	"github.com/spf13/viper"
 	"github.com/niranjan94/rancher-deployer/cmd/utils"
 	"github.com/niranjan94/rancher-deployer/cmd/rancher"
-	"fmt"
 	"github.com/fatih/color"
 )
 
@@ -16,8 +15,6 @@ func Deploy(c *cli.Context) {
 		color.Yellow("No environments specified. Skipping deployments.")
 		return
 	}
-
-	homeDirectory := DownloadDependencies()
 
 	environments := strings.Split(c.String("environments"), ",")
 
@@ -51,32 +48,16 @@ func Deploy(c *cli.Context) {
 				rancherUrl = globalRancherUrl
 			}
 
-			ranch := rancher.New(homeDirectory, token, project, rancherUrl)
+			ranch := rancher.New(token, project, rancherUrl)
 
 			if tagOverride != "" && (image != "" || imageOverride != "") {
 				imageToUse := imageOverride
 				if imageOverride == "" {
 					imageToUse = image
 				}
-				ranch.RunKubectlCommand(
-					fmt.Sprintf(
-						"set image deployment/%s --namespace=%s %s=%s:%s",
-						deployment,
-						namespace,
-						deployment,
-						imageToUse,
-						tagOverride,
-					),
-				)
+				ranch.K8sClient.UpdateDeploymentImage(namespace, deployment, imageToUse, tagOverride)
 			}
-			ranch.RunKubectlCommand(
-				fmt.Sprintf(
-					"patch deployment %s -p \"%s\" --namspace=%s",
-					deployment,
-					rancher.GetDeploymentPatchString(),
-					namespace,
-				),
-			)
+			ranch.K8sClient.UpdateDeployment(namespace, deployment, rancher.GetDeploymentPatchString())
 			color.Green("✔Updated deployment %s in %s", deployment, namespace)
 		}
 	}

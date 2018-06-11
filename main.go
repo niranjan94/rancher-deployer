@@ -6,7 +6,6 @@ import (
 	"github.com/urfave/cli"
 	"github.com/niranjan94/rancher-deployer/cmd"
 	"fmt"
-	"github.com/spf13/viper"
 )
 
 var version = "snapshot"
@@ -56,7 +55,6 @@ func main() {
 			os.Setenv("DEPLOYER_TOKEN", c.String("token"))
 		}
 		cmd.LoadConfig(c.String("config"))
-		fmt.Println(viper.Get("rancherUrl"))
 		cmd.Deploy(c)
 		return nil
 	}
