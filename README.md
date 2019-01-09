@@ -32,12 +32,14 @@ environments:
       tag: alpine
       namespace: api
       deployment: redis-server
+      type: deployment
     -
       project: c-12ab3:p-4c5def
       image: 111111111111.dkr.ecr.ap-west-1.amazonaws.com/dev-api-server
       tag: latest
       namespace: api
       deployment: api-server
+      type: statefulset
   production:
     -
       project: c-4c5def:p-12ab3
