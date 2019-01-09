@@ -1,9 +1,11 @@
 package rancher
 
 import (
+	"github.com/rancher/norman/clientbase"
+	"github.com/rancher/types/client/project/v3"
+	"strconv"
 	"strings"
-	"fmt"
-	"gopkg.in/resty.v1"
+	"time"
 )
 
 //ServerConfig holds the config for each server the user has setup
@@ -18,8 +20,7 @@ type ServerConfig struct {
 
 type Rancher struct {
 	config ServerConfig
-	K8sClient *K8s
-	client *resty.Client
+	client *client.Client
 }
 
 type KubeConfigApiResponse struct {
@@ -29,26 +30,51 @@ type KubeConfigApiResponse struct {
 func New(token string, project string, serverUrl string) *Rancher {
 	r := new(Rancher)
 	splitToken := strings.Split(token, ":")
-	r.config = ServerConfig{
+
+	projectUrl := serverUrl + "/v3/project/" + project
+
+	rancherClient, err := client.NewClient(&clientbase.ClientOpts{
 		AccessKey: splitToken[0],
 		SecretKey: splitToken[1],
 		TokenKey:  token,
-		URL:       serverUrl,
-		Project:   project,
+		URL:       projectUrl,
 		CACerts:    "",
-	}
-	r.client = resty.New()
-	r.client.SetBasicAuth(r.config.AccessKey, r.config.SecretKey)
-	r.client.HostURL = r.config.URL
-	r.client.SetHeader("Accept", "application/json")
-
-	resp, err := r.client.R().SetResult(KubeConfigApiResponse{}).Post(fmt.Sprintf("/v3/clusters/%s?action=generateKubeconfig", strings.Split(project, ":")[0]))
+	})
 
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
-
-	kubeConfig := resp.Result().(*KubeConfigApiResponse).Config
-	r.K8sClient = NewK8sClient(kubeConfig, false)
+	r.client = rancherClient
 	return r
+}
+
+func (r *Rancher) Redeploy(id string) error {
+	workload, err := r.client.Workload.ByID(id)
+	if err != nil {
+		return err
+	}
+	newWorkload := &client.Workload{}
+	newWorkload.Labels = workload.Labels
+	newWorkload.Labels["updated-at"] = strconv.FormatInt(time.Now().Unix(), 10)
+	workload, err = r.client.Workload.Update(workload, newWorkload)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *Rancher) UpdateImage(id string, image string, tag string) error  {
+	workload, err := r.client.Workload.ByID(id)
+	if err != nil {
+		return err
+	}
+	newWorkload := &client.Workload{}
+	newWorkload.Containers[0].Image = image + ":" + tag
+	newWorkload.Labels = workload.Labels
+	newWorkload.Labels["updated-at"] = strconv.FormatInt(time.Now().Unix(), 10)
+	workload, err = r.client.Workload.Update(workload, newWorkload)
+	if err != nil {
+		return err
+	}
+	return nil
 }

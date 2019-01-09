@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"reflect"
 	"github.com/spf13/viper"
+	"reflect"
 )
 
 //noinspection GoUnusedExportedFunction

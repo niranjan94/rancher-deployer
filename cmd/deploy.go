@@ -1,12 +1,13 @@
 package cmd
 
 import (
+	"fmt"
+	"github.com/fatih/color"
+	"github.com/niranjan94/rancher-deployer/cmd/rancher"
+	"github.com/niranjan94/rancher-deployer/cmd/utils"
+	"github.com/spf13/viper"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/spf13/viper"
-	"github.com/niranjan94/rancher-deployer/cmd/utils"
-	"github.com/niranjan94/rancher-deployer/cmd/rancher"
-	"github.com/fatih/color"
 )
 
 func Deploy(c *cli.Context) {
@@ -41,8 +42,13 @@ func Deploy(c *cli.Context) {
 			rancherUrl := config.GetString("rancherUrl")
 			project := config.GetString("project")
 			image := config.GetString("image")
-			deployment := config.GetString("deployment")
+			deploymentName := config.GetString("deployment")
 			namespace := config.GetString("namespace")
+			deploymentType := config.GetString("type")
+
+			if deploymentType == "" {
+				deploymentType = "deployment"
+			}
 
 			if  rancherUrl == "" {
 				rancherUrl = globalRancherUrl
@@ -50,15 +56,23 @@ func Deploy(c *cli.Context) {
 
 			ranch := rancher.New(token, project, rancherUrl)
 
+			id := fmt.Sprintf("%s:%s:%s", deploymentType, namespace, deploymentName)
+			var err error
 			if tagOverride != "" && (image != "" || imageOverride != "") {
 				imageToUse := imageOverride
 				if imageOverride == "" {
 					imageToUse = image
 				}
-				ranch.K8sClient.UpdateDeploymentImage(namespace, deployment, imageToUse, tagOverride)
+				err = ranch.UpdateImage(id, imageToUse, tagOverride)
+			} else {
+				err = ranch.Redeploy(id)
 			}
-			ranch.K8sClient.UpdateDeployment(namespace, deployment, rancher.GetDeploymentPatchString())
-			color.Green("✔Updated deployment %s in %s", deployment, namespace)
+
+			if err != nil {
+				color.Green("✔Updated %s %s in %s", deploymentType, deploymentName, namespace)
+			} else {
+				color.Red("✗Failed to update %s %s in %s : %s", deploymentType, deploymentName, namespace, err.Error())
+			}
 		}
 	}
 }

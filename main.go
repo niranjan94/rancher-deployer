@@ -1,11 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"github.com/niranjan94/rancher-deployer/cmd"
+	"github.com/urfave/cli"
 	"log"
 	"os"
-	"github.com/urfave/cli"
-	"github.com/niranjan94/rancher-deployer/cmd"
-	"fmt"
 )
 
 var version = "snapshot"
@@ -52,7 +52,7 @@ func main() {
 
 	app.Action = func(c *cli.Context) error {
 		if c.String("token") != "" {
-			os.Setenv("DEPLOYER_TOKEN", c.String("token"))
+			_ = os.Setenv("DEPLOYER_TOKEN", c.String("token"))
 		}
 		cmd.LoadConfig(c.String("config"))
 		cmd.Deploy(c)

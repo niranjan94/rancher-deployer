@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"github.com/spf13/viper"
-	"fmt"
-	"strings"
-	"io/ioutil"
 	"bytes"
+	"fmt"
+	"github.com/spf13/viper"
+	"io/ioutil"
+	"strings"
 )
 
 func LoadConfig(pathToConfig string) {
