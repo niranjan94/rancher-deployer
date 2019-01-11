@@ -30,7 +30,7 @@ clean:
 	rm -rf dist
 
 run:
-	$(GOBUILD) -ldflags="${LDFLAGS}" -o $(BINARY_NAME) -v
+	CGO_ENABLED=0 $(GOBUILD) -ldflags="${LDFLAGS}" -o $(BINARY_NAME) -v
 	./$(BINARY_NAME) $(ARGS)
 
 deps:
@@ -39,4 +39,4 @@ deps:
 	$(DEPCMD) ensure
 
 release: clean
-	$(GOXCMD) -arch="${ARCH}" -os="${OS}" -ldflags="${LDFLAGS}" -output="dist/${BINARY_NAME}_{{.OS}}_x86_64"
+	CGO_ENABLED=0 $(GOXCMD) -arch="${ARCH}" -os="${OS}" -ldflags="${LDFLAGS}" -output="dist/${BINARY_NAME}_{{.OS}}_x86_64"

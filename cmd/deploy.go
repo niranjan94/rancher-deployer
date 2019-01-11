@@ -68,7 +68,7 @@ func Deploy(c *cli.Context) {
 				err = ranch.Redeploy(id)
 			}
 
-			if err != nil {
+			if err == nil {
 				color.Green("✔Updated %s %s in %s", deploymentType, deploymentName, namespace)
 			} else {
 				color.Red("✗Failed to update %s %s in %s : %s", deploymentType, deploymentName, namespace, err.Error())
