@@ -21,7 +21,7 @@ require (
 	github.com/rancher/norman v0.0.0-20181220035647-0557aa4ff31a
 	github.com/rancher/types v0.0.0-20190109051915-0fe6b540ae7f
 	github.com/sirupsen/logrus v1.3.0
-	github.com/spf13/afero v1.1.0
+	github.com/spf13/afero v1.2.2
 	github.com/spf13/cast v1.2.0
 	github.com/spf13/jwalterweatherman v0.0.0-20180109140146-7c0cea34c8ec
 	github.com/spf13/pflag v1.0.1
