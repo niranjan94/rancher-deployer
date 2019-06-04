@@ -11,7 +11,7 @@ require (
 	github.com/google/gofuzz v0.0.0-20170612174753-24818f796faf
 	github.com/gorilla/websocket v1.4.0
 	github.com/hashicorp/hcl v0.0.0-20180404174102-ef8a98b0bbce
-	github.com/konsorten/go-windows-terminal-sequences v1.0.1
+	github.com/konsorten/go-windows-terminal-sequences v1.0.2
 	github.com/magiconair/properties v1.8.0
 	github.com/mattn/go-colorable v0.0.9
 	github.com/mattn/go-isatty v0.0.3
