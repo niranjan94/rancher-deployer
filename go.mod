@@ -14,7 +14,7 @@ require (
 	github.com/konsorten/go-windows-terminal-sequences v1.0.1
 	github.com/magiconair/properties v1.8.0
 	github.com/mattn/go-colorable v0.0.9
-	github.com/mattn/go-isatty v0.0.3
+	github.com/mattn/go-isatty v0.0.10
 	github.com/mitchellh/mapstructure v0.0.0-20180511142126-bb74f1db0675
 	github.com/pelletier/go-toml v1.2.0
 	github.com/pkg/errors v0.8.1
