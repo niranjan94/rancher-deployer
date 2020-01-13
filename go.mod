@@ -3,7 +3,7 @@ module github.com/niranjan94/rancher-deployer
 go 1.12
 
 require (
-	github.com/fatih/color v1.7.0
+	github.com/fatih/color v1.9.0
 	github.com/fsnotify/fsnotify v1.4.7
 	github.com/ghodss/yaml v1.0.0
 	github.com/gogo/protobuf v1.0.0
