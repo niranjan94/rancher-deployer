@@ -25,7 +25,7 @@ require (
 	github.com/spf13/cast v1.2.0
 	github.com/spf13/jwalterweatherman v0.0.0-20180109140146-7c0cea34c8ec
 	github.com/spf13/pflag v1.0.1
-	github.com/spf13/viper v1.6.1
+	github.com/spf13/viper v1.6.2
 	github.com/urfave/cli v1.22.2
 	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793
 	golang.org/x/sys v0.0.0-20180905080454-ebe1bf3edb33
