@@ -30,6 +30,6 @@ require (
 	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793
 	golang.org/x/sys v0.0.0-20180905080454-ebe1bf3edb33
 	golang.org/x/text v0.3.0
-	gopkg.in/yaml.v2 v2.2.7
+	gopkg.in/yaml.v2 v2.2.8
 	k8s.io/apimachinery v0.0.0-20180228050457-302974c03f7e
 )
