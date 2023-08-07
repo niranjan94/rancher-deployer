@@ -17,7 +17,7 @@ require (
 	github.com/mattn/go-isatty v0.0.3
 	github.com/mitchellh/mapstructure v0.0.0-20180511142126-bb74f1db0675
 	github.com/pelletier/go-toml v1.2.0
-	github.com/pkg/errors v0.8.1
+	github.com/pkg/errors v0.9.1
 	github.com/rancher/norman v0.0.0-20181220035647-0557aa4ff31a
 	github.com/rancher/types v0.0.0-20190109051915-0fe6b540ae7f
 	github.com/sirupsen/logrus v1.3.0
